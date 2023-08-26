@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  web:
+    build: nodejs
+    ports:
+      - "80:1337"
+    command: sh -c "/wait && sails lift"
+    environment:
+      - WAIT_HOSTS=db:5432
+      - WAIT_HOSTS_TIMEOUT=30
+      - WAIT_SLEEP_INTERVAL=60
+      - WAIT_HOST_CONNECT_TIMEOUT=30
+ 
+  db:
+    image: postgres:alpine
+    ports:
+      - 5432
+    environment:
+      - POSTGRES_DB=animal
+      - POSTGRES_USER=maria
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - ./db/sql:/docker-entrypoint-initdb.d
+    
